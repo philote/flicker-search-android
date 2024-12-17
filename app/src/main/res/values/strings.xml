@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Flicker Search</string>
+
+    <string name="image_detail_title">Image Details</string>
+
+    <string name="back_button">Back</string>
+
+    <string name="loading">Loading</string>
+    <string name="error">Error</string>
+    <string name="enter_tags_above">Enter Your Search Tags Above.</string>
+</resources>
