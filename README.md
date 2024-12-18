@@ -4,6 +4,5 @@
 
 ## Screenshots
 <img src="Screenshot_Homescreen_Init.png" alt="Screenshot Home Screen" width="200"/>
-
-![List Screen](Screenshot_Homescreen_Search.png "Screenshot List Screen")
-![Detail Screen](Screenshot_Details.png "Screenshot Detail Screen")
+<img src="Screenshot_Homescreen_Search.png" alt="Screenshot List Screen" width="200"/>
+<img src="Screenshot_Details.png" alt="Screenshot Detail Screen" width="200"/>
