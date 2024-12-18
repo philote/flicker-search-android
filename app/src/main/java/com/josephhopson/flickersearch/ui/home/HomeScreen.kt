@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.josephhopson.flickersearch.ui.home
 

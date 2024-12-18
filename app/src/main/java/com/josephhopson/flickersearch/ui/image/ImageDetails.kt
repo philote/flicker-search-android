@@ -1,26 +1,14 @@
 package com.josephhopson.flickersearch.ui.image
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import com.josephhopson.flickersearch.data.Image
 import kotlinx.parcelize.Parcelize
-import java.util.UUID
-
-data class ImageDetailUiState(
-    val imageDetails: ImageDetails = ImageDetails()
-)
-
-class ImageDetailsViewModel() : ViewModel() {
-    var imageDetailsUiState by mutableStateOf(ImageDetailUiState())
-        private set
-}
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Parcelize
 data class ImageDetails(
-    val id: String = "",
     val imageThumbUrl: String = "",
     val imageUrl: String = "",
     val dateTaken: String = "",
@@ -30,15 +18,22 @@ data class ImageDetails(
 ) : Parcelable
 
 fun Image.toImageDetails(): ImageDetails = ImageDetails(
-    id = UUID.randomUUID().toString(),
     imageThumbUrl = media.m,
     imageUrl = getFullImageUrl(media.m),
-    dateTaken = dateTaken,
-    published = published,
+    dateTaken = formatDateString(dateTaken),
+    published = formatDateString(published),
     author = author,
     tags = tags
 )
 
 fun getFullImageUrl(thumbUrl: String): String {
     return thumbUrl.replace("_m", "")
+}
+
+@SuppressLint("NewApi")
+fun formatDateString(dateString: String): String {
+    val inputFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    val zonedDateTime = ZonedDateTime.parse(dateString, inputFormatter)
+    val outputFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy hh:mm a")
+    return zonedDateTime.format(outputFormatter)
 }
