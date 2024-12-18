@@ -7,30 +7,38 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.josephhopson.flickersearch.FlickerSearchAppBar
 import com.josephhopson.flickersearch.R
 import com.josephhopson.flickersearch.ui.AppViewModelProvider
@@ -44,13 +52,12 @@ object HomeDestination : NavigationDestination {
 
 @Composable
 fun HomeScreen(
-    navigateToItemDetail: () -> Unit,
+    navigateToItemDetail: (ImageDetails) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val homeUiState by viewModel.uiState.collectAsState()
     val scrollBehavior = enterAlwaysScrollBehavior()
-    viewModel.updateSearchTerm("cat")
 
     Scaffold(
         modifier = modifier,
@@ -65,7 +72,9 @@ fun HomeScreen(
         HomeBody(
             modifier = modifier.fillMaxSize(),
             contentPadding = innerPadding,
-            currentState = homeUiState.currentState
+            onItemClick = navigateToItemDetail,
+            currentState = homeUiState.currentState,
+            viewModel = viewModel
         )
     }
 }
@@ -74,82 +83,82 @@ fun HomeScreen(
 fun HomeBody(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
-    currentState: HomeUiStates
+    onItemClick: (ImageDetails) -> Unit,
+    currentState: HomeUiStates,
+    viewModel: HomeViewModel
 ) {
-    Text(
-        text = "Hello World!"
-    )
-    when(currentState) {
-        HomeUiStates.Landing -> Landing()
-        HomeUiStates.Loading -> Loading()
-        HomeUiStates.Error -> Error()
-        is HomeUiStates.Success -> ImageList(
-            images = currentState.imageList,
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(contentPadding),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val focusManager = LocalFocusManager.current
+        OutlinedTextField(
+            value = viewModel.userSearchTags,
+            singleLine = true,
+            shape = MaterialTheme.shapes.large,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
+            ),
+            onValueChange = { viewModel.updateSearchTerm(it) },
+            label = {
+                        Text(
+                            stringResource(R.string.txt_field_enter_your_search)
+                        )
+                    },
+            isError = false,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Text
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    viewModel.getImages()
+                    focusManager.clearFocus()
+                }
+            )
         )
+        when(currentState) {
+            HomeUiStates.Landing -> Landing()
+            HomeUiStates.Loading -> Loading()
+            HomeUiStates.Error -> Error()
+            is HomeUiStates.Success -> ImageList(
+                images = currentState.imageList,
+                onItemClick = onItemClick
+            )
+        }
     }
 }
 
 @Composable
 fun ImageList(
     images: List<ImageDetails>,
-//    onItemClick: (ImageDetails) -> Unit,
+    onItemClick: (ImageDetails) -> Unit,
 ) {
-    LazyColumn {
-        items(images) {image ->
-            ImageCard(
-                image = image,
-            )
-        }
-    }
-}
-
-@Composable
-fun ImageCard(
-    image: ImageDetails,
-    modifier: Modifier = Modifier,
-//    onItemClick: (Forecast) -> Unit,
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(4.dp),
-//            .clickable { onItemClick(forecast) },
-        shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Row {
-                Text(
-                    text = "Description: ",
-                    fontWeight = FontWeight.Bold
-                )
-                Text(text = image.description)
-            }
-            Row {
-                Text(
-                    text = "URL: ",
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = image.imageUrl
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Adaptive(150.dp),
+        verticalItemSpacing = dimensionResource(R.dimen.padding_extra_small),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_extra_small)),
+        content = {
+            items(images) { image ->
+                AsyncImage(
+                    model = image.imageThumbUrl,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .clickable { onItemClick(image) }
                 )
             }
-            Row {
-                Text(
-                    text = "Thumb URL: ",
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = image.imageThumbUrl
-                )
-            }
-            Text(
-                text = image.tags
-            )
-        }
-    }
+        },
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 @Composable
@@ -160,13 +169,13 @@ fun Loading() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier.size(dimensionResource(R.dimen.icon_large)),
             painter = painterResource(R.drawable.loading),
             contentDescription = stringResource(R.string.loading)
         )
         Text(
             text = stringResource(R.string.loading),
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
             style= MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
@@ -181,14 +190,13 @@ fun Landing() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier.size(dimensionResource(R.dimen.icon_large)),
             painter = painterResource(R.drawable.image_search),
             contentDescription = stringResource(R.string.enter_tags_above)
         )
         Text(
             text = stringResource(R.string.enter_tags_above),
-            modifier = Modifier
-                .padding(16.dp),
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
             style=MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
@@ -203,13 +211,13 @@ fun Error() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            modifier = Modifier.size(50.dp),
+            modifier = Modifier.size(dimensionResource(R.dimen.icon_large)),
             painter = painterResource(R.drawable.error),
             contentDescription = stringResource(R.string.error)
         )
         Text(
             text = stringResource(R.string.error),
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
             style=MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )

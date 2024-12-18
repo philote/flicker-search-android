@@ -12,11 +12,8 @@ data class ImageDetailUiState(
 )
 
 class ImageDetailsViewModel() : ViewModel() {
-
     var imageDetailsUiState by mutableStateOf(ImageDetailUiState())
         private set
-
-
 }
 
 data class ImageDetails(
@@ -24,7 +21,6 @@ data class ImageDetails(
     val imageThumbUrl: String = "",
     val imageUrl: String = "",
     val dateTaken: String = "",
-    val description: String = "",
     val published: String = "",
     val author: String = "",
     val tags: String = "",
@@ -32,10 +28,9 @@ data class ImageDetails(
 
 fun Image.toImageDetails(): ImageDetails = ImageDetails(
     id = UUID.randomUUID().toString(),
-    imageThumbUrl = getFullImageUrl(media.m),
-    imageUrl = media.m,
+    imageThumbUrl = media.m,
+    imageUrl = getFullImageUrl(media.m),
     dateTaken = dateTaken,
-    description = description,
     published = published,
     author = author,
     tags = tags

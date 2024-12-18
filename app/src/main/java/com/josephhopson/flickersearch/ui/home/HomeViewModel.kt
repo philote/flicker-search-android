@@ -37,6 +37,7 @@ class HomeViewModel(private val imageRepository: ImageRepository) : ViewModel() 
 
     fun updateSearchTerm(tags: String) {
         userSearchTags = tags
+        // TODO if empty clear search
         getImages()
     }
 
