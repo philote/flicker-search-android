@@ -4,7 +4,8 @@
 
 ## Screenshots
 <p float="middle">
-<img src="Screenshot_Homescreen_Init.png" alt="Screenshot Home Screen" width="32%"/>
-<img src="Screenshot_Homescreen_Search.png" alt="Screenshot List Screen" width="32%"/>
-<img src="Screenshot_Details.png" alt="Screenshot Detail Screen" width="32%"/>
+<img src="Screenshot_Splash.png" alt="Screenshot Splash Screen" width="24%"/>
+<img src="Screenshot_Homescreen_Init.png" alt="Screenshot Home Screen" width="24%"/>
+<img src="Screenshot_Homescreen_Search.png" alt="Screenshot List Screen" width="24%"/>
+<img src="Screenshot_Details.png" alt="Screenshot Detail Screen" width="24%"/>
 </p>
