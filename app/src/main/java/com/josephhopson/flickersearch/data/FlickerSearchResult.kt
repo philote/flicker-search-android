@@ -3,6 +3,10 @@ package com.josephhopson.flickersearch.data
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * Data classes for the Flicker public feed search API
+ */
+
 @Serializable
 data class FlickerSearchResult(
     val title: String,

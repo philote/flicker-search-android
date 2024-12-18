@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 
 package com.josephhopson.flickersearch.ui.home
 
@@ -21,7 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
@@ -38,6 +38,7 @@ import com.josephhopson.flickersearch.FlickerSearchAppBar
 import com.josephhopson.flickersearch.R
 import com.josephhopson.flickersearch.ui.AppViewModelProvider
 import com.josephhopson.flickersearch.ui.image.ImageDetails
+import com.josephhopson.flickersearch.ui.theme.FlickerSearchTheme
 
 @Composable
 fun HomeScreen(
@@ -65,6 +66,10 @@ fun HomeScreen(
             .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            /*
+            INFO: here be dragons, I failed at making the search
+            bars bend to my will within the given time frame
+            */
             DockedSearchBar(
                 inputField = {
                     SearchBarDefaults.InputField(
@@ -180,5 +185,30 @@ fun Error() {
             style=MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.primary
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoadingPreview() {
+    FlickerSearchTheme {
+        Loading()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LandingPreview() {
+    FlickerSearchTheme {
+        Landing()
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorPreview() {
+    FlickerSearchTheme {
+        Error()
     }
 }

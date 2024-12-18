@@ -16,11 +16,17 @@ private val retrofit = Retrofit.Builder()
     .addConverterFactory(retroJson.asConverterFactory("application/json; charset=UTF8".toMediaType()))
     .build()
 
+/**
+ * Interface for the Flicker public feed search API
+ */
 interface ImageApiService {
     @GET("feeds/photos_public.gne?format=json&nojsoncallback=1")
     suspend fun getFlickerResults(@Query("tags") tags: String): FlickerSearchResult
 }
 
+/**
+ * Singleton for the Flicker API
+ */
 object FlickerApi {
     val retrofitService: ImageApiService by lazy {
         retrofit.create(ImageApiService::class.java)

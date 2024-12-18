@@ -22,9 +22,11 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.josephhopson.flickersearch.ui.home.HomeScreen
 import com.josephhopson.flickersearch.ui.image.ImageDetails
 import com.josephhopson.flickersearch.ui.image.ImageDetailsScreen
+import com.josephhopson.flickersearch.ui.theme.FlickerSearchTheme
 
 /**
  * Top level composable that represents screens for the application.
@@ -100,4 +102,15 @@ fun FlickerSearchAppBar(
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FlickerSearchAppBarPreview() {
+    FlickerSearchTheme {
+        FlickerSearchAppBar(
+            title = "Preview ",
+            canNavigateBack = true
+        )
+    }
 }

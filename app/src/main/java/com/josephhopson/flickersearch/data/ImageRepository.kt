@@ -5,22 +5,34 @@ import com.josephhopson.flickersearch.data.network.FlickerApi
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * A Sealed Interface for the Image API results
+ */
 sealed interface ImageApiResult {
     data class Success(val images: List<Image>): ImageApiResult
     data object Error: ImageApiResult
 }
 
+/**
+ * Interface for the Image Repository
+ */
 interface ImageRepository {
     suspend fun getImageSearchResults(tags: String): ImageApiResult
 }
 
-class NetworkImageDataRepository(): ImageRepository {
+/**
+ * Default implementation of the Image Repository
+ */
+class NetworkImageDataRepository: ImageRepository {
     override suspend fun getImageSearchResults(tags: String): ImageApiResult {
         return try {
             val result = FlickerApi.retrofitService.getFlickerResults(tags)
-            Log.d("FlickerApi", result.toString())
-            // TODO check images for content and send error when empty
-            ImageApiResult.Success(result.images)
+            if (result.images.isEmpty()) {
+                Log.e("FlickerApi", "Image list is empty")
+                ImageApiResult.Error
+            } else {
+                ImageApiResult.Success(result.images)
+            }
         } catch (e: IOException) {
             Log.e("FlickerApi:IOException", e.message.toString())
             ImageApiResult.Error
