@@ -3,6 +3,7 @@
 * This project uses Flicker's public feed API https://www.flickr.com/services/feeds/docs/photos_public/
 
 ## Screenshots
-![Home Screen](Screenshot_Homescreen_Init.png "Screenshot Home Screen" | width=100)
+<img src="Screenshot_Homescreen_Init.png" alt="Screenshot Home Screen" width="200"/>
+
 ![List Screen](Screenshot_Homescreen_Search.png "Screenshot List Screen")
 ![Detail Screen](Screenshot_Details.png "Screenshot Detail Screen")
