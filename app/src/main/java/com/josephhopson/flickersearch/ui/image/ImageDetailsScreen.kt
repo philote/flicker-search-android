@@ -1,21 +1,38 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.josephhopson.flickersearch.ui.image
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults.enterAlwaysScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.josephhopson.flickersearch.FlickerSearchAppBar
 import com.josephhopson.flickersearch.R
-import com.josephhopson.flickersearch.ui.navigation.NavigationDestination
-
-object ImageDetailsDestination : NavigationDestination {
-    override val route = "image_details"
-    override val titleRes = R.string.image_detail_title
-    const val IMAGE_ID_ARG = "imageId"
-    val routeWithArgs = "$route/{$IMAGE_ID_ARG}"
-}
 
 @Composable
 fun ImageDetailsScreen (
-    navigateBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageDetails: ImageDetails,
+    onItemClick: () -> Unit,
 ) {
-    // TODO
+    Scaffold(
+        modifier = Modifier,
+        topBar = {
+            FlickerSearchAppBar(
+                title = stringResource(R.string.image_detail_title),
+                scrollBehavior = enterAlwaysScrollBehavior(),
+                canNavigateBack = true,
+                navigateUp = onItemClick
+            )
+        }
+    ) { innerPadding ->
+        Text(
+            modifier = Modifier.padding(innerPadding),
+            text = "Hello World!"
+        )
+    }
 }

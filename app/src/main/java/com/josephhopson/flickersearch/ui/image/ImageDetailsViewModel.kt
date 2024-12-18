@@ -1,10 +1,12 @@
 package com.josephhopson.flickersearch.ui.image
 
+import android.os.Parcelable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.josephhopson.flickersearch.data.Image
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
 data class ImageDetailUiState(
@@ -16,6 +18,7 @@ class ImageDetailsViewModel() : ViewModel() {
         private set
 }
 
+@Parcelize
 data class ImageDetails(
     val id: String = "",
     val imageThumbUrl: String = "",
@@ -24,7 +27,7 @@ data class ImageDetails(
     val published: String = "",
     val author: String = "",
     val tags: String = "",
-)
+) : Parcelable
 
 fun Image.toImageDetails(): ImageDetails = ImageDetails(
     id = UUID.randomUUID().toString(),
